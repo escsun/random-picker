@@ -4,25 +4,15 @@ import json
 
 from api.youtube import (
     get_live_chat_id,
-    get_live_stream_video_id_by_channel
+    get_live_stream_video_id_by_channel,
+    request_chat_messages
 )
 
 from utils.chat import websocket_chat_message
 
 
-async def request_chat_messages(next_page_token, live_chat_id, token, max_results=200):
-    """Запрос на получение сообщений из чата"""
-    messages_url = 'https://www.googleapis.com/youtube/v3/liveChat/messages'
-
-    request_properties = {
-        "liveChatId": live_chat_id,
-        "part": "snippet,id,authorDetails",
-        "key": token,
-        "maxResults": max_results,
-        "pageToken": next_page_token
-    }
-    response = requests.get(messages_url, request_properties)
-    body = json.loads(response.content)
+async def request_chat_messages_async(next_page_token, live_chat_id, token):
+    body = request_chat_messages(next_page_token, live_chat_id, token)
     polling_interval_millis = body['pollingIntervalMillis']
     next_page_token_request = body['nextPageToken']
     items = body['items']
@@ -40,7 +30,7 @@ async def request_chat_messages(next_page_token, live_chat_id, token, max_result
     # Выставляем задержку на получение сообщений
     await asyncio.sleep(polling_interval_millis / 1000)
     # Делаем новый запрос с next_page_token
-    await request_chat_messages(next_page_token_request, live_chat_id, token)
+    await request_chat_messages_async(next_page_token_request, live_chat_id, token)
 
 
 async def youtube_client_chat(channel, token):
@@ -51,4 +41,4 @@ async def youtube_client_chat(channel, token):
 
     if live_chat_id:
         # Делаем запрос на получение сообщений
-        await request_chat_messages('', live_chat_id, token)
+        await request_chat_messages_async('', live_chat_id, token)

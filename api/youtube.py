@@ -44,3 +44,18 @@ def get_live_chat_id(video_id, token):
         return active_live_chat_id
     except KeyError as err:
         print("Key error:", err)
+
+
+def request_chat_messages(next_page_token, live_chat_id, token, max_results=200):
+    """Запрос на получение сообщений из чата"""
+    messages_url = 'https://www.googleapis.com/youtube/v3/liveChat/messages'
+
+    request_properties = {
+        "liveChatId": live_chat_id,
+        "part": "snippet,id,authorDetails",
+        "key": token,
+        "maxResults": max_results,
+        "pageToken": next_page_token
+    }
+    response = requests.get(messages_url, request_properties)
+    return json.loads(response.content)
