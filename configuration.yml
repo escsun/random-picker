@@ -1,0 +1,9 @@
+twitch:
+  channel: ""
+  token: example_token
+  username: example_username
+youtube:
+  channel: ""
+  token: example_token
+goodgame:
+  channel: ""
