@@ -15,6 +15,6 @@ def get_channel_id(channel):
             # Возвращаем channel_id
             return channel_id
         except AttributeError as err:
-            print("Oops attribute error: ", err)
+            print("Channel not found")
     except requests.exceptions.RequestException as err:
-        print("Oops request error occurred: ", err)
+        print("Request exception: ", err)
