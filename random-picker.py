@@ -15,4 +15,9 @@ if __name__ == '__main__':
     tasks_app = tasks_load_app()
 
     loop = asyncio.get_event_loop()
-    loop.run_forever()
+    # Собираем количество активных задач
+    tasks_active_count = len(asyncio.Task.all_tasks())
+    if tasks_active_count > 0:
+        loop.run_forever()
+    else:
+        print("Configure your configuration.yml file.")
