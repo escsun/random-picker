@@ -3,8 +3,10 @@ import websockets
 import json
 
 from api.goodgame import get_channel_id
-from utils.chat import websocket_chat_message
-
+from utils.chat import (
+    websocket_chat_message,
+    message_to_send
+)
 
 async def goodgame_client_chat(channel):
     """Клиент чат на websocket"""
@@ -26,10 +28,9 @@ async def goodgame_client_chat(channel):
                 if message['type'] == 'message':
                     username = data['user_name']
                     text = data['text']
-                    await websocket_chat_message("goodgame - {name}: {message}".format(
-                        name=username,
-                        message=text
-                    ))
+                    await websocket_chat_message(
+                        message_to_send(username, text, "goodgame")
+                    )
             except websockets.exceptions.ConnectionClosed:
                 # Переподключение к чату
                 asyncio.sleep(0, loop=await goodgame_client_chat(channel))

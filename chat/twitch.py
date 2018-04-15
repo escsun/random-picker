@@ -2,7 +2,10 @@ import asyncio
 import websockets
 
 from utils.parsemsg import parsemsg
-from utils.chat import websocket_chat_message
+from utils.chat import (
+    websocket_chat_message,
+    message_to_send
+)
 
 
 async def twitch_client_chat(username, channel, token):
@@ -23,10 +26,9 @@ async def twitch_client_chat(username, channel, token):
                     display_name = data['display-name']
                     message = data['message']
                     if display_name and message:
-                        await websocket_chat_message("twitch - {name}: {message}".format(
-                            name=display_name,
-                            message=message
-                        ))
+                        await websocket_chat_message(
+                            message_to_send(display_name, message, "twitch")
+                        )
                 except Exception as err:
                     pass
             except websockets.exceptions.ConnectionClosed as err:

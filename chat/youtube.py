@@ -8,7 +8,10 @@ from api.youtube import (
     request_chat_messages
 )
 
-from utils.chat import websocket_chat_message
+from utils.chat import (
+    websocket_chat_message,
+    message_to_send
+)
 
 
 async def request_chat_messages_async(next_page_token, live_chat_id, token):
@@ -23,10 +26,9 @@ async def request_chat_messages_async(next_page_token, live_chat_id, token):
         display_name = author_details['displayName']
         snippet = message_raw['snippet']
         display_message = snippet['displayMessage']
-        await websocket_chat_message("youtube - {name}: {message}".format(
-            name=display_name,
-            message=display_message
-        ))
+        await websocket_chat_message(
+            message_to_send(display_name, display_message, "youtube")
+        )
     # Выставляем задержку на получение сообщений
     await asyncio.sleep(polling_interval_millis / 1000)
     # Делаем новый запрос с next_page_token
