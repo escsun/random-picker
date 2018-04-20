@@ -20,9 +20,9 @@ def get_live_stream_video_id_by_channel(channel_id, token):
     try:
         video_id = items[0]['id']['videoId']
         return video_id
-    except IndexError as err:
+    except IndexError:
         # Данный канал не ведет онлайн трансляцию
-        print("Broadcast offline")
+        print("youtube broadcast offline")
 
 
 def get_live_chat_id(video_id, token):
@@ -43,7 +43,7 @@ def get_live_chat_id(video_id, token):
         active_live_chat_id = live_streaming_details['activeLiveChatId']
         return active_live_chat_id
     except KeyError as err:
-        print("Key error:", err)
+        pass
 
 
 def request_chat_messages(next_page_token, live_chat_id, token, max_results=200):
