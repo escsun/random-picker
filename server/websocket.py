@@ -15,6 +15,7 @@ class EchoWebSocket(WebSocketHandler):
         pass
 
     def on_message(self, message):
+        print(message)
         for client in active_clients:
             client.write_message(message)
 
