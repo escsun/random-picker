@@ -38,9 +38,17 @@ async def request_chat_messages_async(next_page_token, live_chat_id, token):
         await request_chat_messages_async('', live_chat_id, token)
 
 
+async def get_live_stream_video_id_by_channel_async(channel, token):
+    try:
+        video_id = get_live_stream_video_id_by_channel(channel, token)
+        return video_id
+    except Exception:
+        asyncio.Task.current_task().stop()
+
+
 async def youtube_client_chat(channel, token):
     # Получаем video_id стрима
-    video_id = get_live_stream_video_id_by_channel(channel, token)
+    video_id = await get_live_stream_video_id_by_channel_async(channel, token)
     # Получаем live_chat_id для получения сообщений
     live_chat_id = get_live_chat_id(video_id, token)
 
